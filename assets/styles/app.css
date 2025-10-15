@@ -1,3 +1,7 @@
+@import "tailwindcss";
+@source not "../../public";
+@plugin "daisyui";
+
 body {
     background-color: skyblue;
 }
