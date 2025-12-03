@@ -25,4 +25,8 @@ return [
     '@hotwired/turbo' => [
         'version' => '7.3.0',
     ],
+    'bootstrap-icons/font/bootstrap-icons.min.css' => [
+        'version' => '1.13.1',
+        'type' => 'css',
+    ],
 ];

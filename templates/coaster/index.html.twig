@@ -3,43 +3,84 @@
 {% block title %}Liste des Coasters{% endblock %}
 
 {% block body %}
-    <div class="container mx-auto p-4">
-        <h1 class="text-3xl font-bold mb-4">Liste des Coasters</h1>
-    
-        <a href="{{ path('app_coaster_add') }}" class="btn btn-primary mt-4">
-            Ajouter un coaster
-        </a>
-        
-        
-        <div class="overflow-x-auto">
-            <table class="table table-zebra w-full">
-                <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Vitesse max</th>
-                        <th>Longueur</th>
-                        <th>Hauteur max</th>
-                        <th>En fonction</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for coaster in coasters %}
-                        <tr>
-                            <td>{{ coaster.name }}</td>
-                            <td>{{ coaster.maxSpeed }}</td>
-                            <td>{{ coaster.length }}</td>
-                            <td>{{ coaster.maxHeight }}</td>
-                            <td>
-                                {% if coaster.operating %}
-                                    <span class="badge badge-success">Oui</span>
-                                {% else %}
-                                    <span class="badge badge-error">Non</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <h1>Liste des Coasters</h1>
+
+    {# Formulaire de filtrage #}
+    <form method="GET" action="{{ path('app_coaster_index') }}" class="mb-6 flex gap-4">
+        <select name="park" class="select select-bordered">
+            <option value="">Tous les parcs</option>
+            {% for park in parks %}
+                <option value="{{ park.id }}" {% if app.request.query.get('park') == park.id %}selected{% endif %}>
+                    {{ park.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <select name="category" class="select select-bordered">
+            <option value="">Toutes les catégories</option>
+            {% for category in categories %}
+                <option value="{{ category.id }}" {% if app.request.query.get('category') == category.id %}selected{% endif %}>
+                    {{ category.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn btn-primary">Filtrer</button>
+        <a href="{{ path('app_coaster_index') }}" class="btn btn-secondary">Réinitialiser</a>
+    </form>
+
+
+    {# Bouton d'ajout #}
+    <a href="{{ path('app_coaster_add') }}" class="btn btn-primary mb-4">Ajouter un coaster</a>
+
+    {# Tableau des coasters #}
+    <table class="table table-zebra w-full">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Vitesse max</th>
+                <th>Longueur</th>
+                <th>Hauteur max</th>
+                <th>Park</th>
+                <th>Catégories</th>
+                <th>En fonction</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for coaster in coasters %}
+                <tr>
+                    <td>{{ coaster.name }}</td>
+                    <td>{{ coaster.maxSpeed }}</td>
+                    <td>{{ coaster.length }}</td>
+                    <td>{{ coaster.maxHeight }}</td>
+                    <td>{{ coaster.park }}</td>
+                    <td>
+                        {% for category in coaster.categories %}
+                            {{ category.name }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% if coaster.operating %}
+                            <span class="badge badge-success">Oui</span>
+                        {% else %}
+                            <span class="badge badge-error">Non</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ path('app_coaster_edit', {id: coaster.id}) }}" class="btn btn-sm btn-info">Modifier</a>
+                        <a href="{{ path('app_coaster_delete', {id: coaster.id}) }}" class="btn btn-sm btn-error">Supprimer</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8" class="text-center">Aucun coaster trouvé</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if pageCount > 1 %}
+        {% include "utils/_pagination.html.twig" with {'route': 'app_coaster_index'} %}
+    {% endif %}
 {% endblock %}
+

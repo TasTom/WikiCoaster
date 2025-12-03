@@ -1,6 +1,8 @@
-@import "tailwindcss";
-@source "../../templates";
-@plugin "daisyui";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "bootstrap-icons/font/bootstrap-icons";
 
 body {
     background-color: skyblue;

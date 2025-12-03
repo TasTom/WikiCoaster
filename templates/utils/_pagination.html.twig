@@ -1,0 +1,16 @@
+{# templates/utils/_pagination.html.twig #}
+
+<nav aria-label="page" class="mt-6">
+  <ul class="flex gap-2 justify-center">
+    {% for p in 1..pageCount %}
+      <li>
+        <a 
+          class="btn btn-sm {% if app.request.get('p', 1) == p %}btn-primary{% else %}btn-outline{% endif %}" 
+          href="{{ path(route, app.request.get('_route_params')|merge(app.request.query.all|merge({'p': p}))) }}"
+        >
+          {{ p }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</nav>

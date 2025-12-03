@@ -2,8 +2,8 @@
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
     "@symfony/stimulus-bridge": "^4.0.1",
-    "core-js": "^3.46.0",
-    "daisyui": "^5.3.2"
+    "bootstrap": "^5.3.8",
+    "core-js": "^3.46.0"
   },
   "scripts": {
     "dev-server": "encore dev-server",
@@ -15,8 +15,10 @@
     "@symfony/ux-turbo": "file:vendor/symfony/ux-turbo/assets",
     "@symfony/webpack-encore": "^5.2.0",
     "@tailwindcss/postcss": "^4.1.14",
+    "bootstrap-icons": "^1.13.1",
+    "daisyui": "^5.5.6",
     "postcss": "^8.5.6",
     "postcss-loader": "^8.2.0",
-    "tailwindcss": "^4.1.14"
+    "tailwindcss": "^4.1.17"
   }
 }
