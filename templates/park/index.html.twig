@@ -23,8 +23,14 @@
                 <td>{{ park.country }}</td>
                 <td>{{ park.openingYeaar }}</td>
                 <td>
-                    <a href="{{ path('app_park_show', {'id': park.id}) }}" class="btn btn-primary mt-4">show</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('app_park_delete', {'id': park.id}) }}" class="btn btn-danger mt-4">delete</a>
                     <a href="{{ path('app_park_edit', {'id': park.id}) }}" class="btn btn-primary mt-4">edit</a>
+                    
+                    {% endif %}
+                    <a href="{{ path('app_park_show', {'id': park.id}) }}" class="btn btn-primary mt-4">show</a>
+                    
+                    
                 </td>
             </tr>
         {% else %}
@@ -34,6 +40,7 @@
         {% endfor %}
         </tbody>
     </table>
-
+    {% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('app_park_new') }}" class="btn btn-primary mt-4">Create new</a>
+    {% endif %}
 {% endblock %}

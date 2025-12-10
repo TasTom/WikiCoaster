@@ -25,13 +25,16 @@
             {% endfor %}
         </select>
 
-        <button type="submit" class="btn btn-primary">Filtrer</button>
-        <a href="{{ path('app_coaster_index') }}" class="btn btn-secondary">Réinitialiser</a>
+        <button type="submit" class="btn btn-primary mb-4">Filtrer</button>
+        <a href="{{ path('app_coaster_index') }}" class="btn btn-primary mb-4">Réinitialiser</a>
     </form>
 
 
     {# Bouton d'ajout #}
+    {% if is_granted('ROLE_USER') %}
     <a href="{{ path('app_coaster_add') }}" class="btn btn-primary mb-4">Ajouter un coaster</a>
+    {% endif %}
+
 
     {# Tableau des coasters #}
     <table class="table table-zebra w-full">
@@ -68,8 +71,10 @@
                         {% endif %}
                     </td>
                     <td>
+                        {% if is_granted('ROLE_USER') %}
                         <a href="{{ path('app_coaster_edit', {id: coaster.id}) }}" class="btn btn-sm btn-info">Modifier</a>
                         <a href="{{ path('app_coaster_delete', {id: coaster.id}) }}" class="btn btn-sm btn-error">Supprimer</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}

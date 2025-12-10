@@ -22,7 +22,12 @@
                 <td>{{ category.color }}</td>
                 <td>
                     <a class="btn btn-primary mt-4" href="{{ path('app_category_show', {'id': category.id}) }}">show</a>
+                    {% if is_granted('ROLE_USER') %}
                     <a class="btn btn-primary mt-4" href="{{ path('app_category_edit', {'id': category.id}) }}">edit</a>
+                    <a class="btn btn-danger mt-4" href="{{ path('app_category_delete', {'id': category.id}) }}">delete</a>
+                    {% endif %}
+                    
+
                 </td>
             </tr>
         {% else %}
@@ -33,5 +38,7 @@
         </tbody>
     </table>
 
+    {% if is_granted('ROLE_USER') %}
     <a class="btn btn-primary mt-4" href="{{ path('app_category_new') }}">Create new</a>
+    {% endif %}
 {% endblock %}

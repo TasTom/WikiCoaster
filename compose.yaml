@@ -4,7 +4,7 @@ services:
         image: 'mysql:latest'
         environment:
             MYSQL_ROOT_PASSWORD: password
-            MYSQL_DATABASE: TP_Symphony
+            MYSQL_DATABASE: wikicoaster
             MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
         ports:
             # To allow the host machine to access the ports below, modify the lines below.

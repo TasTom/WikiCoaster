@@ -17,6 +17,11 @@
         <main class="flex flex-nowrap h-[100vh]">
             <div class="flex flex-col shrink-0 shadow w-[240px] bg-base-200">
                 <a href="{{ path('app_home') }}"><div class="py-2 bg-primary text-center">Wiki Coaster</div></a>
+                <a href="{{ path('app_user_index') }}">Users</a>
+                <a href="{{ path('app_register') }}"><div class="py-2 bg-secondary text-center">S'inscrire</div></a>
+                <a href="{{ path('app_login') }}"><div class="py-2 bg-secondary text-center">Se connecter</div></a>
+                <a href="{{ path('app_logout') }}"><div class="py-2 bg-secondary text-center">Se déconnecter</div></a>
+
                 <ul class="menu bg-base-200 rounded-box w-56">
                     <li><a href="{{ path('app_coaster_index') }}" > Coasters</a></li>
                     <li><a href="{{ path('app_park_index') }}" > Parcs</a></li>

@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class CoasterController extends AbstractController
 {
@@ -50,6 +51,7 @@ class CoasterController extends AbstractController
     }
 
     // Formulaire d'ajout
+    #[IsGranted('ROLE_USER')]
     #[Route('/coasters/add', name: 'app_coaster_add')]
     public function add(
         Request $request,
@@ -75,6 +77,7 @@ class CoasterController extends AbstractController
     }
 
     //(id<d+>) est un paramètre de un ou plusieurs entiers
+    #[IsGranted('ROLE_USER')]
     #[Route('/coaster/{id<\d+>}/edit', name: 'app_coaster_edit')]
     public function edit(Coaster $entity,
         Request $request,
@@ -94,6 +97,7 @@ class CoasterController extends AbstractController
 
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/{id}/delete', name: 'app_coaster_delete', methods: ['GET', 'POST'])]
     public function delete(Request $request, Coaster $coaster, EntityManagerInterface $entityManager): Response
     {
