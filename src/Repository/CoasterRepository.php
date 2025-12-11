@@ -6,13 +6,14 @@ use App\Entity\Coaster;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @extends ServiceEntityRepository<Coaster>
  */
 class CoasterRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry,private readonly Security $security)
     {
         parent::__construct($registry, Coaster::class);
     }
@@ -40,6 +41,20 @@ class CoasterRepository extends ServiceEntityRepository
                 ->setParameter('categoryId', (int)$categoryId)
             ;
         }
+
+        if (!$this->security->isGranted('ROLE_ADMIN')) {
+            $user = $this->security->getUser();
+            
+            if ($user) {
+                // Utilisateur authentifié : publiés OU ses propres coasters
+                $qb->andWhere('c.published = true OR c.author = :author')
+                   ->setParameter('author', $user);
+            } else {
+                // Visiteur non authentifié : seulement les publiés
+                $qb->andWhere('c.published = true');
+            }
+        }
+
         $begin = ($page - 1) * $count;
 
         $qb->setFirstResult($begin) //offset

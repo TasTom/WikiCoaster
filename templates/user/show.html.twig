@@ -1,38 +1,49 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User{% endblock %}
+{% block title %}{{ user.username }}{% endblock %}
 
 {% block body %}
-    <h1>User</h1>
+<div class="mb-4">
+    <a href="{{ path('app_user_index') }}" class="btn btn-sm btn-ghost">
+        ← Retour à la liste
+    </a>
+</div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ user.id }}</td>
-            </tr>
-            <tr>
-                <th>Username</th>
-                <td>{{ user.username }}</td>
-            </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td>{{ user.password }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+        <h2 class="card-title text-3xl">{{ user.username }}</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div class="stat bg-base-200 rounded-lg">
+                <div class="stat-title">Email</div>
+                <div class="stat-value text-2xl">{{ user.email }}</div>
+            </div>
+            
+            <div class="stat bg-base-200 rounded-lg">
+                <div class="stat-title">Rôles</div>
+                <div class="stat-value text-xl">
+                    {% for role in user.roles %}
+                        {% if role == 'ROLE_ADMIN' %}
+                            <span class="badge badge-error badge-lg">Admin</span>
+                        {% elseif role == 'ROLE_USER' %}
+                            <span class="badge badge-info badge-lg">User</span>
+                        {% else %}
+                            <span class="badge badge-lg">{{ role }}</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
-
-    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
-
-    {{ include('user/_delete_form.html.twig') }}
+        <div class="card-actions justify-end mt-6">
+            <a href="{{ path('app_user_edit', {id: user.id}) }}" class="btn btn-warning">
+                Modifier
+            </a>
+            <form method="post" action="{{ path('app_user_delete', {id: user.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                <button type="submit" class="btn btn-error">Supprimer</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

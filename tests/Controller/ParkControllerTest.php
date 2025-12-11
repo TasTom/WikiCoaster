@@ -50,7 +50,7 @@ final class ParkControllerTest extends WebTestCase
         $this->client->submitForm('Save', [
             'park[name]' => 'Testing',
             'park[country]' => 'Testing',
-            'park[openingYeaar]' => 'Testing',
+            'park[openingYear]' => 'Testing',
         ]);
 
         self::assertResponseRedirects($this->path);
@@ -64,7 +64,7 @@ final class ParkControllerTest extends WebTestCase
         $fixture = new Park();
         $fixture->setName('My Title');
         $fixture->setCountry('My Title');
-        $fixture->setOpeningYeaar('My Title');
+        $fixture->setopeningYear('My Title');
 
         $this->manager->persist($fixture);
         $this->manager->flush();
@@ -83,7 +83,7 @@ final class ParkControllerTest extends WebTestCase
         $fixture = new Park();
         $fixture->setName('Value');
         $fixture->setCountry('Value');
-        $fixture->setOpeningYeaar('Value');
+        $fixture->setopeningYear('Value');
 
         $this->manager->persist($fixture);
         $this->manager->flush();
@@ -93,7 +93,7 @@ final class ParkControllerTest extends WebTestCase
         $this->client->submitForm('Update', [
             'park[name]' => 'Something New',
             'park[country]' => 'Something New',
-            'park[openingYeaar]' => 'Something New',
+            'park[openingYear]' => 'Something New',
         ]);
 
         self::assertResponseRedirects('/park/');
@@ -102,7 +102,7 @@ final class ParkControllerTest extends WebTestCase
 
         self::assertSame('Something New', $fixture[0]->getName());
         self::assertSame('Something New', $fixture[0]->getCountry());
-        self::assertSame('Something New', $fixture[0]->getOpeningYeaar());
+        self::assertSame('Something New', $fixture[0]->getopeningYear());
     }
 
     public function testRemove(): void
@@ -111,7 +111,7 @@ final class ParkControllerTest extends WebTestCase
         $fixture = new Park();
         $fixture->setName('Value');
         $fixture->setCountry('Value');
-        $fixture->setOpeningYeaar('Value');
+        $fixture->setopeningYear('Value');
 
         $this->manager->persist($fixture);
         $this->manager->flush();

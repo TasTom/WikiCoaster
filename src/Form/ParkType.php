@@ -21,7 +21,7 @@ class ParkType extends AbstractType
                 'required' => true,
                 'preferred_choices' => ['FR'], 
             ])
-            ->add('openingYeaar', IntegerType::class);
+            ->add('openingYear', IntegerType::class);
         ;
     }
 

@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ coaster.name }}{% endblock %}
+
+{% block body %}
+<div class="mb-4">
+    <a href="{{ path('app_coaster_index') }}" class="btn btn-sm btn-ghost">
+        ← Retour à la liste
+    </a>
+</div>
+
+<div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+        <h2 class="card-title text-3xl">
+            {{ coaster.name }}
+            {% if is_granted('ROLE_ADMIN') %}
+                {% if coaster.published %}
+                    <span class="badge badge-success">Publié</span>
+                {% else %}
+                    <span class="badge badge-warning">Non publié</span>
+                {% endif %}
+            {% endif %}
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div class="stat bg-base-200 rounded-lg">
+                <div class="stat-title">Vitesse maximale</div>
+                <div class="stat-value text-primary">{{ coaster.maxSpeed }}</div>
+                <div class="stat-desc">km/h</div>
+            </div>
+            
+            <div class="stat bg-base-200 rounded-lg">
+                <div class="stat-title">Longueur</div>
+                <div class="stat-value text-secondary">{{ coaster.length }}</div>
+                <div class="stat-desc">mètres</div>
+            </div>
+            
+            <div class="stat bg-base-200 rounded-lg">
+                <div class="stat-title">Hauteur maximale</div>
+                <div class="stat-value text-accent">{{ coaster.maxHeight }}</div>
+                <div class="stat-desc">mètres</div>
+            </div>
+            
+            <div class="stat bg-base-200 rounded-lg">
+                <div class="stat-title">Statut</div>
+                <div class="stat-value text-sm">
+                    {% if coaster.operating %}
+                        <span class="badge badge-success badge-lg">En fonction</span>
+                    {% else %}
+                        <span class="badge badge-error badge-lg">Arrêté</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="space-y-4">
+            {% if coaster.park %}
+                <div>
+                    <h3 class="font-bold text-lg mb-2">🏞️ Parc</h3>
+                    <a href="{{ path('app_park_show', {id: coaster.park.id}) }}" class="btn btn-outline">
+                        {{ coaster.park.name }}
+                    </a>
+                </div>
+            {% endif %}
+
+            {% if coaster.categories|length > 0 %}
+                <div>
+                    <h3 class="font-bold text-lg mb-2">📁 Catégories</h3>
+                    <div class="flex flex-wrap gap-2">
+                        {% for category in coaster.categories %}
+                            <span class="badge badge-lg" style="background-color: {{ category.color }}; color: white;">
+                                {{ category.name }}
+                            </span>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if coaster.author %}
+                <div>
+                    <h3 class="font-bold text-lg mb-2">✍️ Auteur</h3>
+                    <p>{{ coaster.author.username }}</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="card-actions justify-end mt-6">
+            {% if is_granted('COASTER_EDIT', coaster) %}
+                {{ include('coaster/_form.html.twig', {'button_label': 'Modifier'}) }}
+                {{ include('coaster/_delete_form.html.twig') }}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

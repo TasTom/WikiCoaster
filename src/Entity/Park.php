@@ -22,7 +22,7 @@ class Park
     private ?string $country = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $openingYeaar = null;
+    private ?int $openingYear = null;
 
     #[ORM\OneToMany(targetEntity: Coaster::class, mappedBy: 'park')]
     private Collection $coasters;
@@ -59,14 +59,14 @@ class Park
         return $this;
     }
 
-    public function getOpeningYeaar(): ?int
+    public function getOpeningYear(): ?int
     {
-        return $this->openingYeaar;
+        return $this->openingYear;
     }
 
-    public function setOpeningYeaar(?int $openingYeaar): static
+    public function setopeningYear(?int $openingYear): static
     {
-        $this->openingYeaar = $openingYeaar;
+        $this->openingYear = $openingYear;
         return $this;
     }
 

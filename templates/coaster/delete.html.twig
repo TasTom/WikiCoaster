@@ -1,18 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Supprimer un Coaster{% endblock %}
+{% block title %}Supprimer {{ coaster.name }}{% endblock %}
 
 {% block body %}
-    <div class="container mx-auto p-4">
-        <h1 class="text-3xl font-bold mb-4">Supprimer un Coaster</h1>
-         <p>Êtes-vous sûr de vouloir supprimer ce coaster ?</p>
-        <form method="post" action="{{ path('app_coaster_delete', {'id': coaster.id}) }}">
-            <input type="hidden" name="_token" value="{{ csrf_token('delete') }}">
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
-        </form>
-
-        <a href="{{ path('app_coaster_index') }}" class="btn btn-primary mt-4">
-            Retour à la liste
-        </a>
+<div class="card bg-base-100 shadow-xl max-w-md mx-auto">
+    <div class="card-body">
+        <h2 class="card-title text-error">Confirmer la suppression</h2>
+        <p class="py-4">
+            Êtes-vous sûr de vouloir supprimer le coaster <strong>{{ coaster.name }}</strong> ?
+            Cette action est irréversible.
+        </p>
+        
+        <div class="card-actions justify-end">
+            <a href="{{ path('app_coaster_index') }}" class="btn btn-ghost">Annuler</a>
+            <form method="post" action="{{ path('app_coaster_delete', {id: coaster.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete') }}">
+                <button type="submit" class="btn btn-error">Supprimer</button>
+            </form>
+        </div>
     </div>
+</div>
 {% endblock %}

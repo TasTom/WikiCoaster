@@ -44,6 +44,9 @@ class Coaster
     #[ORM\JoinColumn(nullable: true)] // nullable pour les anciens coasters sans auteur
     private ?User $author = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $published = null;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
@@ -155,6 +158,17 @@ class Coaster
     public function setAuthor(?User $author): static
     {
         $this->author = $author;
+        return $this;
+    }
+
+    public function isPublished(): ?bool
+    {
+        return $this->published;
+    }
+
+    public function setPublished(?bool $published): static
+    {
+        $this->published = $published;
         return $this;
     }
 }

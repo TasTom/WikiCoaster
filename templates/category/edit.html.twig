@@ -1,13 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Category{% endblock %}
+{% block title %}{% if category.id %}Modifier{% else %}Nouvelle{% endif %} catégorie{% endblock %}
 
 {% block body %}
-    <h1>Edit Category</h1>
+<div class="mb-4">
+    <a href="{{ path('app_category_index') }}" class="btn btn-sm btn-ghost">
+        ← Retour à la liste
+    </a>
+</div>
 
-    {{ include('category/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a class="btn btn-primary mt-4" href="{{ path('app_category_index') }}">back to list</a>
-
-    {{ include('category/_delete_form.html.twig') }}
+<div class="card bg-base-100 shadow-xl max-w-2xl mx-auto">
+    <div class="card-body">
+        <h2 class="card-title text-2xl mb-4">
+            {% if category.id %}Modifier la catégorie{% else %}Nouvelle catégorie{% endif %}
+        </h2>
+        
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <div class="card-actions justify-end mt-6">
+                <a href="{{ path('app_category_index') }}" class="btn btn-ghost">Annuler</a>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
 {% endblock %}

@@ -3,40 +3,16 @@
 {% block title %}Liste des Coasters{% endblock %}
 
 {% block body %}
-    <h1>Liste des Coasters</h1>
-
-    {# Formulaire de filtrage #}
-    <form method="GET" action="{{ path('app_coaster_index') }}" class="mb-6 flex gap-4">
-        <select name="park" class="select select-bordered">
-            <option value="">Tous les parcs</option>
-            {% for park in parks %}
-                <option value="{{ park.id }}" {% if app.request.query.get('park') == park.id %}selected{% endif %}>
-                    {{ park.name }}
-                </option>
-            {% endfor %}
-        </select>
-
-        <select name="category" class="select select-bordered">
-            <option value="">Toutes les catégories</option>
-            {% for category in categories %}
-                <option value="{{ category.id }}" {% if app.request.query.get('category') == category.id %}selected{% endif %}>
-                    {{ category.name }}
-                </option>
-            {% endfor %}
-        </select>
-
-        <button type="submit" class="btn btn-primary mb-4">Filtrer</button>
-        <a href="{{ path('app_coaster_index') }}" class="btn btn-primary mb-4">Réinitialiser</a>
-    </form>
-
-
-    {# Bouton d'ajout #}
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">🎢 Coasters</h1>
     {% if is_granted('ROLE_USER') %}
-    <a href="{{ path('app_coaster_add') }}" class="btn btn-primary mb-4">Ajouter un coaster</a>
+        <a href="{{ path('app_coaster_add') }}" class="btn btn-primary">
+            Ajouter un coaster
+        </a>
     {% endif %}
+</div>
 
-
-    {# Tableau des coasters #}
+<div class="overflow-x-auto">
     <table class="table table-zebra w-full">
         <thead>
             <tr>
@@ -44,24 +20,31 @@
                 <th>Vitesse max</th>
                 <th>Longueur</th>
                 <th>Hauteur max</th>
-                <th>Park</th>
+                <th>Parc</th>
                 <th>Catégories</th>
                 <th>En fonction</th>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <th>Statut</th>
+                {% endif %}
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for coaster in coasters %}
                 <tr>
-                    <td>{{ coaster.name }}</td>
-                    <td>{{ coaster.maxSpeed }}</td>
-                    <td>{{ coaster.length }}</td>
-                    <td>{{ coaster.maxHeight }}</td>
+                    <td class="font-bold">{{ coaster.name }}</td>
+                    <td>{{ coaster.maxSpeed }} km/h</td>
+                    <td>{{ coaster.length }} m</td>
+                    <td>{{ coaster.maxHeight }} m</td>
                     <td>{{ coaster.park }}</td>
                     <td>
-                        {% for category in coaster.categories %}
-                            {{ category.name }}{% if not loop.last %}, {% endif %}
-                        {% endfor %}
+                        <div class="flex flex-wrap gap-1">
+                            {% for category in coaster.categories %}
+                                <span class="badge badge-sm" style="background-color: {{ category.color }}; color: white;">
+                                    {{ category.name }}
+                                </span>
+                            {% endfor %}
+                        </div>
                     </td>
                     <td>
                         {% if coaster.operating %}
@@ -70,22 +53,39 @@
                             <span class="badge badge-error">Non</span>
                         {% endif %}
                     </td>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <td>
+                            {% if coaster.published %}
+                                <span class="badge badge-success">Publié</span>
+                            {% else %}
+                                <span class="badge badge-warning">Non publié</span>
+                            {% endif %}
+                        </td>
+                    {% endif %}
                     <td>
-                        {% if is_granted('ROLE_USER') %}
-                        <a href="{{ path('app_coaster_edit', {id: coaster.id}) }}" class="btn btn-sm btn-info">Modifier</a>
-                        <a href="{{ path('app_coaster_delete', {id: coaster.id}) }}" class="btn btn-sm btn-error">Supprimer</a>
-                        {% endif %}
+                        <div class="flex gap-2">
+                            <a href="{{ path('app_coaster_show', {id: coaster.id}) }}" class="btn btn-sm btn-info">
+                                Voir
+                            </a>
+                            {% if is_granted('COASTER_EDIT', coaster) %}
+                                <a href="{{ path('app_coaster_edit', {id: coaster.id}) }}" class="btn btn-sm btn-warning">
+                                    Modifier
+                                </a>
+                                <a href="{{ path('app_coaster_delete', {id: coaster.id}) }}" class="btn btn-sm btn-error">
+                                    Supprimer
+                                </a>
+                            {% endif %}
+                        </div>
                     </td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="8" class="text-center">Aucun coaster trouvé</td>
+                    <td colspan="{% if is_granted('ROLE_ADMIN') %}9{% else %}8{% endif %}" class="text-center text-gray-500">
+                        Aucun coaster trouvé
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-    {% if pageCount > 1 %}
-        {% include "utils/_pagination.html.twig" with {'route': 'app_coaster_index'} %}
-    {% endif %}
+</div>
 {% endblock %}
-

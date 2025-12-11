@@ -13,24 +13,71 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-     <body>
+    <body>
         <main class="flex flex-nowrap h-[100vh]">
             <div class="flex flex-col shrink-0 shadow w-[240px] bg-base-200">
-                <a href="{{ path('app_home') }}"><div class="py-2 bg-primary text-center">Wiki Coaster</div></a>
-                <a href="{{ path('app_user_index') }}">Users</a>
-                <a href="{{ path('app_register') }}"><div class="py-2 bg-secondary text-center">S'inscrire</div></a>
-                <a href="{{ path('app_login') }}"><div class="py-2 bg-secondary text-center">Se connecter</div></a>
-                <a href="{{ path('app_logout') }}"><div class="py-2 bg-secondary text-center">Se déconnecter</div></a>
-
-                <ul class="menu bg-base-200 rounded-box w-56">
-                    <li><a href="{{ path('app_coaster_index') }}" > Coasters</a></li>
-                    <li><a href="{{ path('app_park_index') }}" > Parcs</a></li>
-                    <li><a href="{{ path('app_category_index') }}" > Catégories</a></li>
+                <a href="{{ path('app_home') }}">
+                    <div class="py-4 bg-primary text-center text-primary-content font-bold text-xl">
+                        🎢 Wiki Coaster
+                    </div>
+                </a>
+                
+                <ul class="menu bg-base-200 w-full flex-1">
+                    <li class="menu-title">
+                        <span>Navigation</span>
+                    </li>
+                    <li><a href="{{ path('app_coaster_index') }}">🎢 Coasters</a></li>
+                    <li><a href="{{ path('app_park_index') }}">🏞️ Parcs</a></li>
+                    <li><a href="{{ path('app_category_index') }}">📁 Catégories</a></li>
+                    
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="menu-title mt-4">
+                            <span>Administration</span>
+                        </li>
+                        <li><a href="{{ path('app_user_index') }}">👥 Users</a></li>
+                    {% endif %}
                 </ul>
+
+                <div class="p-4 border-t border-base-300">
+                    {% if app.user %}
+                        <div class="mb-3 text-sm">
+                            <div class="font-bold">{{ app.user.username }}</div>
+                            <div class="text-xs text-base-content/70">{{ app.user.email }}</div>
+                        </div>
+                        <a href="{{ path('app_logout') }}" class="btn btn-sm btn-ghost w-full">
+                            Se déconnecter
+                        </a>
+                    {% else %}
+                        <a href="{{ path('app_register') }}" class="btn btn-sm btn-primary w-full mb-2">
+                            S'inscrire
+                        </a>
+                        <a href="{{ path('app_login') }}" class="btn btn-sm btn-secondary w-full">
+                            Se connecter
+                        </a>
+                    {% endif %}
+                </div>
             </div>
           
-            <div class="p-4 flex-grow-1">
-                <div class="bg-base-200 p-2 rounded-xs border-base-300">
+            <div class="p-4 flex-grow overflow-y-auto">
+                <div class="bg-base-200 p-4 rounded-lg border border-base-300">
+                    {% for message in app.flashes('success') %}
+                        <div role="alert" class="alert alert-success mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                    
+                    {% for message in app.flashes('error') %}
+                        <div role="alert" class="alert alert-error mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                    
                     {% block body %}{% endblock %}
                 </div>     
             </div>

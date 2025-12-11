@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class CoasterController extends AbstractController
 {
@@ -22,9 +23,15 @@ class CoasterController extends AbstractController
         Request $request,
         CoasterRepository $coasterRepository,
         ParkRepository $parkRepository,
-        CategoryRepository $categoryRepository
+        CategoryRepository $categoryRepository,
+        AuthorizationCheckerInterface $authChecker
         ): Response
         {
+        if ($authChecker->isGranted('ROLE_ADMIN')) {
+            $paginator = $coasterRepository->findAll();
+        } else {
+            $paginator = $coasterRepository->findBy(['published' => true]);
+        }    
         // Récupérer les paramètres GET
         $parkId = $request->query->get('park', '');
         $categoryId = $request->query->get('category', '');
@@ -59,6 +66,9 @@ class CoasterController extends AbstractController
     ): Response
     {
         $entity = new Coaster();
+
+        $user = $this->getUser();
+        $entity->setAuthor($user);
         $form = $this->createForm(CoasterType::class, $entity);
 
         $form->handleRequest($request);
@@ -83,6 +93,7 @@ class CoasterController extends AbstractController
         Request $request,
         EntityManagerInterface $em ): Response
     {
+        $this->denyAccessUnlessGranted('COASTER_EDIT', $entity);
         $form = $this->createForm(CoasterType::class, $entity);
         $form->handleRequest($request);
 
@@ -101,6 +112,7 @@ class CoasterController extends AbstractController
     #[Route('/{id}/delete', name: 'app_coaster_delete', methods: ['GET', 'POST'])]
     public function delete(Request $request, Coaster $coaster, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('COASTER_EDIT', $coaster);
         if ($request->isMethod('POST')) {
             if ($this->isCsrfTokenValid('delete', $request->request->get('_token'))) {
                 $entityManager->remove($coaster);
@@ -111,6 +123,15 @@ class CoasterController extends AbstractController
         }
         
         return $this->render('coaster/delete.html.twig', [
+            'coaster' => $coaster,
+        ]);
+    }
+     #[Route('/coasters/{id}', name: 'app_coaster_show')]
+    public function show(Coaster $coaster, AuthorizationCheckerInterface $authChecker): Response
+    {
+        $this->denyAccessUnlessGranted('COASTER_VIEW', $coaster);
+
+        return $this->render('coaster/show.html.twig', [
             'coaster' => $coaster,
         ]);
     }

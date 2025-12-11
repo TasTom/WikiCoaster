@@ -1,40 +1,70 @@
-{# templates/app/index.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AppController!{% endblock %}
+{% block title %}Accueil - WikiCoaster{% endblock %}
 
 {% block body %}
-    <h1 class="text-3xl font-bold underline">Bienvenue sur wikicoaster !</h1>
-    <div class="badge badge-info">
-    <svg class="size-[1em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor" stroke-linejoin="miter" stroke-linecap="butt"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></circle><path d="m12,17v-5.5c0-.276-.224-.5-.5-.5h-1.5" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></path><circle cx="12" cy="7.25" r="1.25" fill="currentColor" stroke-width="2"></circle></g></svg>
-    Info 2
-    </div>
+<div class="hero min-h-[70vh] bg-base-200 rounded-lg">
+    <div class="hero-content text-center">
+        <div class="max-w-md">
+            <h1 class="text-5xl font-bold mb-4">🎢 WikiCoaster</h1>
+            <p class="text-xl mb-8">
+                Découvrez et partagez des informations sur les montagnes russes du monde entier !
+            </p>
+            
+            <div class="flex gap-4 justify-center">
+                <a href="{{ path('app_coaster_index') }}" class="btn btn-primary btn-lg">
+                    Voir les coasters
+                </a>
+                {% if not app.user %}
+                    <a href="{{ path('app_register') }}" class="btn btn-secondary btn-lg">
+                        S'inscrire
+                    </a>
+                {% endif %}
+            </div>
 
-        <div >
-            <h2 class="flex items-center label mb-2">Présentation</h2>
+            {% if app.user %}
+                <div class="mt-8">
+                    <p class="text-lg">
+                        Bienvenue, <strong>{{ app.user.username }}</strong> !
+                    </p>
+                </div>
+            {% endif %}
         </div>
-
-  
-        <div>
-        <p class="textarea mt-2">Wikicoaster est un projet de création de coaster en ligne.</p>
-        <p class="textarea mt-2">Vous pouvez ajouter, modifier et consulter des informations sur différents coasters.</p>
-        </div>
-
-    {# Bouton HTML submit #}
-    <div class="flex items-center label mb-2">
-        <a href="{{ path('app_coaster_add') }}" class="btn btn-primary mt-2">
-            Ajouter un coaster
-        </a>
-        <a href="{{ path('app_coaster_index') }}" class="btn btn-primary mt-2">
-            Voir la liste
-        </a>
-        <a href="{{ path('app_park_index') }}" class="btn btn-primary mt-2">
-            liste des parks
-        </a>
-        <a href="{{ path('app_category_index') }}" class="btn btn-primary mt-2">
-            Category
-        </a>
     </div>
+</div>
 
-
+<div class="stats stats-vertical lg:stats-horizontal shadow w-full mt-8">
+    <div class="stat">
+        <div class="stat-figure text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-8 w-8 stroke-current">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+        </div>
+        <div class="stat-title">Coasters</div>
+        <div class="stat-value text-primary">{{ coaster_count ?? '?' }}</div>
+        <div class="stat-desc">Dans le monde entier</div>
+    </div>
+    
+    <div class="stat">
+        <div class="stat-figure text-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-8 w-8 stroke-current">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+            </svg>
+        </div>
+        <div class="stat-title">Parcs</div>
+        <div class="stat-value text-secondary">{{ park_count ?? '?' }}</div>
+        <div class="stat-desc">Référencés</div>
+    </div>
+    
+    <div class="stat">
+        <div class="stat-figure text-accent">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-8 w-8 stroke-current">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+        </div>
+        <div class="stat-title">Catégories</div>
+        <div class="stat-value text-accent">{{ category_count ?? '?' }}</div>
+        <div class="stat-desc">Types de coasters</div>
+    </div>
+</div>
 {% endblock %}

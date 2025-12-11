@@ -1,33 +1,55 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Category{% endblock %}
+{% block title %}{{ category.name }}{% endblock %}
 
 {% block body %}
-    <h1>Category</h1>
+<div class="mb-4">
+    <a href="{{ path('app_category_index') }}" class="btn btn-sm btn-ghost">
+        ← Retour à la liste
+    </a>
+</div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ category.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ category.name }}</td>
-            </tr>
-            <tr>
-                <th>Color</th>
-                <td>{{ category.color }}</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+        <h2 class="card-title text-3xl">
+            <span class="badge badge-lg" style="background-color: {{ category.color }}; color: white;">
+                {{ category.name }}
+            </span>
+        </h2>
+        
+        <div class="stat bg-base-200 rounded-lg mt-4">
+            <div class="stat-title">Code couleur</div>
+            <div class="stat-value text-2xl" style="color: {{ category.color }};">{{ category.color }}</div>
+        </div>
 
-    <a class="btn btn-primary mt-4" href="{{ path('app_category_index') }}">back to list</a>
+        {% if category.coasters|length > 0 %}
+            <div class="divider"></div>
+            <h3 class="font-bold text-lg mb-2">🎢 Coasters de cette catégorie</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for coaster in category.coasters %}
+                    <div class="card bg-base-200">
+                        <div class="card-body p-4">
+                            <h4 class="card-title text-base">{{ coaster.name }}</h4>
+                            <a href="{{ path('app_coaster_show', {id: coaster.id}) }}" class="btn btn-sm btn-primary mt-2">
+                                Voir
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-    {% if is_granted('ROLE_ADMIN') %}
-    <a class="btn btn-primary mt-4" href="{{ path('app_category_edit', {'id': category.id}) }}">edit</a>
-    {{ include('category/_delete_form.html.twig') }}
-    {% endif %}
-
-    
+        <div class="card-actions justify-end mt-6">
+            {% if is_granted('ROLE_USER') %}
+                <a href="{{ path('app_category_edit', {id: category.id}) }}" class="btn btn-warning">
+                    Modifier
+                </a>
+                <form method="post" action="{{ path('app_category_delete', {id: category.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                    <button type="submit" class="btn btn-error">Supprimer</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

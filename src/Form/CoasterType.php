@@ -11,9 +11,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Park;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class CoasterType extends AbstractType
 {
+    private AuthorizationCheckerInterface $authChecker;
     public function buildForm(
         FormBuilderInterface $builder,
         array $options
@@ -41,6 +44,12 @@ class CoasterType extends AbstractType
             ])
             ->add('operating')
         ;
+        if ($this->authChecker->isGranted('ROLE_ADMIN')) {
+            $builder->add('published', CheckboxType::class, [
+                'label' => 'Publier cette fiche',
+                'required' => false,
+            ]);
+        }
     }
 
     public function configureOptions(
@@ -52,7 +61,10 @@ class CoasterType extends AbstractType
         ]);
     }
 
-    
+    public function __construct(AuthorizationCheckerInterface $authChecker)
+    {
+        $this->authChecker = $authChecker;
+    }
 }
 
 
